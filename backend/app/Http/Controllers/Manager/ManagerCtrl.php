@@ -13,7 +13,8 @@ class ManagerCtrl extends Controller
 {
     public function index()
     {
-        $userID = auth()->user()->user_id;
+        $user = Auth::user(); 
+        $userID = $user->user_id;
         $cars = tbl_cars::where('user_id', $userID)->get();
         $bookingdata = Booking::with('customer:cus_id,first_name,last_name,phone_number,email', 'car:car_id,car_name')
                               ->whereIn('car_id', $cars->pluck('car_id'))
@@ -45,7 +46,7 @@ class ManagerCtrl extends Controller
             ->groupBy('year')
             ->orderByDesc('year')
             ->get();
-        return view('manager.index', compact('orderCount', 'salesPerMonth','salesPerYear','orderdata'));
+        return view('manager.index', compact('orderCount', 'salesPerMonth','salesPerYear','orderdata','user'));
     }
 
     public function logout(){
